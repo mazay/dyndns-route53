@@ -38,7 +38,7 @@ export AWS_SECRET_ACCESS_KEY=************
 export CONFIG_FILE=/path/to/your/config_file # should be exact path on the container
 ```
 
-Run the backup:
+Run the DNS updater:
 ```bash
 docker run -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" -e "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" -e "CONFIG_FILE=${CONFIG_FILE}" <IMAGE_ID>
 ```
