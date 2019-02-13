@@ -23,7 +23,7 @@ route53_zones:
     - subdomain2.example1.com 
   - zone: example2.com
     hostnames:
-    - example1.com
+    - example2.com
 ```
 
 Map the directory containing the configuration file to the container with the following argument:
