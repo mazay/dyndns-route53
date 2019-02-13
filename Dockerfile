@@ -14,6 +14,7 @@ RUN apk -v --update add \
 RUN mkdir -p /opt/dyn_route53
 
 COPY dyn_route53.yaml /opt/dyn_route53
+COPY ansible.cfg /opt/dyn_route53
 
 COPY update_route53.sh /opt/dyn_route53
 RUN chmod +x /opt/dyn_route53/update_route53.sh
