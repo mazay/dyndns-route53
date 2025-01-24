@@ -1,15 +1,12 @@
 package main
 
 import (
+	"net"
 	"os"
+	"strings"
 
 	"github.com/mazay/dyndns-route53/internal/ipapi"
 	"github.com/mazay/dyndns-route53/internal/route53"
-	"go.uber.org/zap"
-)
-
-var (
-	logger = &zap.Logger{}
 )
 
 // getEnv retrieves the value of the environment variable named by the key.
@@ -31,11 +28,12 @@ func getEnv(key, defaultValue string) string {
 // will log the error and terminate.
 func main() {
 	logLevel := getEnv("LOG_LEVEL", "info")
-	logger = initLogger(logLevel)
+	logger := initLogger(logLevel)
 	defer logger.Sync() //nolint:golint,errcheck
 
 	// get AWS region from env variable or set default
 	region := getEnv("AWS_REGION", "us-east-1")
+	logger.Info("AWS region: " + region)
 
 	// get AWS credentials from env variables, they are optional as we can use other auth methods
 	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
@@ -45,22 +43,41 @@ func main() {
 	if !ok {
 		logger.Fatal("ZONE_ID is not provided")
 	}
+	logger.Info("zone ID: " + zoneId)
 
 	fdqn, ok := os.LookupEnv("FQDN")
 	if !ok {
 		logger.Fatal("FQDN is not provided")
+	}
+	logger.Info("FQDN to be updated: " + fdqn)
+
+	logger.Info("fetching public IP address")
+	ip, err := ipapi.GetIp()
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
+	logger.Info("current IP address: " + ip)
+
+	oldIp, err := net.LookupIP(fdqn)
+	if err != nil {
+		logger.Info(err.Error())
+	}
+
+	if len(oldIp) == 0 {
+		logger.Info("no old IP address found")
+	}
+
+	for _, _ip := range oldIp {
+		if strings.Contains(_ip.String(), ip) {
+			logger.Info("old IP address " + _ip.String() + " is the same as the new IP address " + ip)
+			return
+		}
 	}
 
 	r53 := route53.Route53{
 		Region:          region,
 		AccessKey:       accessKey,
 		SecretAccessKey: secretAccessKey,
-	}
-
-	logger.Info("fetching public IP address")
-	ip, err := ipapi.GetIp()
-	if err != nil {
-		logger.Fatal(err.Error())
 	}
 
 	logger.Info("initializing route53 client")
@@ -74,4 +91,6 @@ func main() {
 	if err != nil {
 		logger.Fatal(err.Error())
 	}
+
+	logger.Info("done")
 }

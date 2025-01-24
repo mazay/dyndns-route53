@@ -33,6 +33,7 @@ func (r *Route53) New() (*Route53, error) {
 	}
 
 	client := route53.NewFromConfig(cfg, func(o *route53.Options) {
+		o.Region = r.Region
 		if r.AccessKey != "" && r.SecretAccessKey != "" {
 			o.Credentials = aws.NewCredentialsCache(
 				credentials.NewStaticCredentialsProvider(
@@ -52,7 +53,7 @@ func (r *Route53) New() (*Route53, error) {
 // UpdateRRecord updates a DNS record in Route53 with the provided name, target, and zone ID.
 // It performs an upsert operation on a CNAME record type, setting the target as the value.
 // Returns an error if the update fails.
-func (r *Route53) UpdateRRecord(name string, target string, zoneId string) error {
+func (r *Route53) UpdateRRecord(zoneId string, name string, target string) error {
 	params := &route53.ChangeResourceRecordSetsInput{
 		ChangeBatch: &types.ChangeBatch{
 			Changes: []types.Change{

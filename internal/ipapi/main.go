@@ -30,7 +30,6 @@ func GetIp() (string, error) {
 		EnableTrace().
 		SetResult(&result).
 		Get("http://ip-api.com/json/")
-
 	if err != nil {
 		return "", err
 	}
