@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/mazay/dyndns-route53/internal/ipapi"
@@ -34,6 +35,13 @@ func main() {
 	// get AWS region from env variable or set default
 	region := getEnv("AWS_REGION", "us-east-1")
 	logger.Info("AWS region: " + region)
+
+	// get TTL and convert to int64
+	ttl, err := strconv.ParseInt(getEnv("TTL", "60"), 10, 64)
+	if err != nil {
+		logger.Fatal("Invalid TTL value: " + err.Error())
+	}
+	logger.Info("TTL: " + strconv.FormatInt(ttl, 10))
 
 	// get AWS credentials from env variables, they are optional as we can use other auth methods
 	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
@@ -87,7 +95,7 @@ func main() {
 	}
 
 	logger.Info("updating route53 record with new IP address: " + ip)
-	err = r.UpdateRRecord(zoneId, fdqn, ip)
+	err = r.UpdateRRecord(zoneId, fdqn, ip, ttl)
 	if err != nil {
 		logger.Fatal(err.Error())
 	}

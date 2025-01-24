@@ -53,7 +53,7 @@ func (r *Route53) New() (*Route53, error) {
 // UpdateRRecord updates a DNS record in Route53 with the provided name, target, and zone ID.
 // It performs an upsert operation on a CNAME record type, setting the target as the value.
 // Returns an error if the update fails.
-func (r *Route53) UpdateRRecord(zoneId string, name string, target string) error {
+func (r *Route53) UpdateRRecord(zoneId string, name string, target string, ttl int64) error {
 	params := &route53.ChangeResourceRecordSetsInput{
 		ChangeBatch: &types.ChangeBatch{
 			Changes: []types.Change{
@@ -61,13 +61,13 @@ func (r *Route53) UpdateRRecord(zoneId string, name string, target string) error
 					Action: types.ChangeActionUpsert,
 					ResourceRecordSet: &types.ResourceRecordSet{
 						Name: aws.String(name),
-						Type: types.RRTypeCname,
+						Type: types.RRTypeA,
 						ResourceRecords: []types.ResourceRecord{
 							{
 								Value: aws.String(target),
 							},
 						},
-						TTL: aws.Int64(60),
+						TTL: aws.Int64(ttl),
 					},
 				},
 			},
