@@ -99,13 +99,13 @@ jobs:
           GOARCH: ${{ matrix.go-arch }}
         run: |
           cd ./src/github.com/${{ github.repository }}
-          make build
+          go build -o ./bin/dyndns-route53-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: s3sync-service-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
-          path: ./src/github.com/${{ github.repository }}/bin/s3sync-service-*
+          name: dyndns-route53-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
+          path: ./src/github.com/${{ github.repository }}/bin/dyndns-route53-*
 
   docker:
     runs-on: ubuntu-latest
@@ -140,7 +140,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: "ghcr.io"
-          username: ${{ secrets.GHCR_REGISTRY_USERNAME }}
+          username: "gha-user"
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
@@ -168,7 +168,7 @@ jobs:
         with:
           merge-multiple: true
           path: artifacts/
-          pattern: s3sync-service-*
+          pattern: dyndns-route53-*
 
       - name: Upload assets
         env:
