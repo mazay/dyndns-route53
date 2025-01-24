@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.34.0
 	github.com/aws/aws-sdk-go-v2/config v1.29.2
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.55
-	github.com/aws/aws-sdk-go-v2/service/route53 v1.48.2
+	github.com/aws/aws-sdk-go-v2/service/route53 v1.48.3
 	github.com/go-resty/resty/v2 v2.16.5
 	go.uber.org/zap v1.27.0
 )
