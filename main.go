@@ -1,0 +1,77 @@
+package main
+
+import (
+	"os"
+
+	"github.com/mazay/dyndns-route53/internal/ipapi"
+	"github.com/mazay/dyndns-route53/internal/route53"
+	"go.uber.org/zap"
+)
+
+var (
+	logger = &zap.Logger{}
+)
+
+// getEnv retrieves the value of the environment variable named by the key.
+// If the variable is not present, it returns the defaultValue.
+func getEnv(key, defaultValue string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+
+	return defaultValue
+}
+
+// main is the entry point of the application. It initializes logging, retrieves
+// necessary environment variables such as log level, AWS region, credentials,
+// zone ID, and fully qualified domain name (FQDN). It then fetches the public
+// IP address using the ipapi package, initializes a Route53 client, and updates
+// the DNS record in Route53 with the new IP address. If any required environment
+// variables are missing or if there are errors during execution, the application
+// will log the error and terminate.
+func main() {
+	logLevel := getEnv("LOG_LEVEL", "info")
+	logger = initLogger(logLevel)
+	defer logger.Sync() //nolint:golint,errcheck
+
+	// get AWS region from env variable or set default
+	region := getEnv("AWS_REGION", "us-east-1")
+
+	// get AWS credentials from env variables, they are optional as we can use other auth methods
+	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
+	secretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
+
+	zoneId, ok := os.LookupEnv("ZONE_ID")
+	if !ok {
+		logger.Fatal("ZONE_ID is not provided")
+	}
+
+	fdqn, ok := os.LookupEnv("FQDN")
+	if !ok {
+		logger.Fatal("FQDN is not provided")
+	}
+
+	r53 := route53.Route53{
+		Region:          region,
+		AccessKey:       accessKey,
+		SecretAccessKey: secretAccessKey,
+	}
+
+	logger.Info("fetching public IP address")
+	ip, err := ipapi.GetIp()
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
+
+	logger.Info("initializing route53 client")
+	r, err := r53.New()
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
+
+	logger.Info("updating route53 record with new IP address: " + ip)
+	err = r.UpdateRRecord(zoneId, fdqn, ip)
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
+}

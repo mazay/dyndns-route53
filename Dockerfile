@@ -1,24 +1,29 @@
-FROM alpine
+FROM --platform=${BUILDPLATFORM:-linux/amd64} public.ecr.aws/docker/library/golang:1.20.4-alpine3.16 AS builder
+ARG RELEASE_VERSION=devel
+ARG TARGETOS
+ARG TARGETARCH
+ENV GOOS=${TARGETOS}
+ENV GOARCH=${TARGETARCH}
+WORKDIR /go/src/github.com/mazay/dyndns-route53
+# hadolint ignore=DL3018
+RUN apk --no-cache add git curl
+COPY ./ ./
+RUN go mod download
+# hadolint ignore=DL3059
+RUN go build
 
-USER root
-
-RUN apk -v --update add \
-        python \
-        py-pip \
-        ansible \
-        && \
-    pip install --upgrade boto && \
-    apk -v --purge del py-pip && \
-    rm /var/cache/apk/*
-
-RUN mkdir -p /opt/dyn_route53
-
-COPY dyn_route53.yaml /opt/dyn_route53
-COPY ansible.cfg /opt/dyn_route53
-
-COPY update_route53.sh /opt/dyn_route53
-RUN chmod +x /opt/dyn_route53/update_route53.sh
-
-WORKDIR /opt/dyn_route53
-
-CMD ["/opt/dyn_route53/update_route53.sh"]
+FROM public.ecr.aws/docker/library/alpine:3.20.3
+ARG TARGETPLATFORM
+LABEL maintainer="Yevgeniy Valeyev <z.mazay@gmail.com>"
+# hadolint ignore=DL3018
+RUN apk --no-cache add ca-certificates
+# hadolint ignore=DL3059
+RUN adduser \
+    --disabled-password \
+    --no-create-home \
+    -u 8888 \
+    dyndns
+USER dyndns
+WORKDIR /app/
+COPY --from=builder /go/src/github.com/mazay/dyndns-route53/dyndns-route53 .
+CMD ["./dyndns-route53"]
