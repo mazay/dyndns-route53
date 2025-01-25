@@ -1,0 +1,11 @@
+apiVersion: v2
+name: dyndns-route53
+description: A Helm chart for deploying dyndns-route53 as a Kubernetes CronJob
+type: application
+version: 0.0.0 # placeholder value, actual version is set by the build job
+appVersion: "0.0.0" # placeholder value, actual version is set by the build job
+
+home: https://github.com/mazay/dyndns-route53
+
+sources:
+  - https://github.com/mazay/dyndns-route53

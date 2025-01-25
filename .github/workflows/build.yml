@@ -176,3 +176,36 @@ jobs:
         run: |
           for artifact in $(ls artifacts/*); do ATTACHMENTS="${ATTACHMENTS} ${artifact}"; done;
           gh release upload ${{ github.ref_name }} ${ATTACHMENTS}
+
+  helm-release:
+    name: helm-release
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+
+      - name: Package Helm Chart
+        run: |
+          cd deploy
+          helm package helm \
+            --version ${{ github.event_name == 'release' && github.event.release.tag_name || '0.0.0' }} \
+            --app-version ${{ github.event_name == 'release' && github.event.release.tag_name || '0.0.0' }}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Helm Chart
+        run: |
+          for pkg in deploy/*.tgz; do
+            if [ -z "${pkg:-}" ]; then
+              break
+            fi
+            helm push ${pkg} oci://ghcr.io/${{ github.repository_owner }}/helm
+          done
