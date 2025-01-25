@@ -1,0 +1,51 @@
+name: Helm lint
+
+on:
+  pull_request:
+    paths:
+      - 'charts/**'
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: helm-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          check-latest: true
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2
+
+    #   - name: Helm template
+    #     run: |
+    #       shopt -s globstar
+    #       for v in deploy/helm/ci/**/*.y*ml; do
+    #         echo "::group::Template for ${v}"
+    #         helm template deploy/helm -f "${v}"
+    #         echo "::endgroup::"
+    #       done
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --config .ct.yaml)
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --config .ct.yaml

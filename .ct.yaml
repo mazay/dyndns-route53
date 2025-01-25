@@ -1,0 +1,6 @@
+target-branch: main
+chart-dirs:
+  - deploy
+check-version-increment: false
+validate-maintainers: false
+lint-conf: lintconf.yaml
