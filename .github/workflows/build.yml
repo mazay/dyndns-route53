@@ -191,8 +191,8 @@ jobs:
         run: |
           cd deploy
           helm package helm \
-            --version ${{ github.event.release.tag_name }} \
-            --app-version ${{ github.event.release.tag_name }}
+            --version ${{ github.event_name == 'release' && github.event.release.tag_name || '0.0.0' }} \
+            --app-version ${{ github.event_name == 'release' && github.event.release.tag_name || '0.0.0' }}
 
       - name: Login to GHCR
         uses: docker/login-action@v3
