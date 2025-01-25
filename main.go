@@ -47,9 +47,9 @@ func main() {
 	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
 	secretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
 
-	zoneId, ok := os.LookupEnv("ZONE_ID")
+	zoneId, ok := os.LookupEnv("AWS_ZONE_ID")
 	if !ok {
-		logger.Fatal("ZONE_ID is not provided")
+		logger.Fatal("AWS_ZONE_ID is not provided")
 	}
 	logger.Info("zone ID: " + zoneId)
 
