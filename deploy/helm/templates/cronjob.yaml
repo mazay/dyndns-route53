@@ -1,7 +1,11 @@
-apiVersion: apps/v1
+{{- $fqdn := .Values.config.fqdn | required ".Values.config.fqdn is required." -}}
+{{- $zoneId := .Values.config.zoneId | required ".Values.config.zoneId is required" -}}
+{{- $fullName := include "dyndns-route53.fullname" . -}}
+
+apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "dyndns-route53.fullname" . }}
+  name: {{ $fullName }}
   labels:
     {{- include "dyndns-route53.labels" . | nindent 4 }}
 spec:
@@ -43,6 +47,20 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          env:
+            - name: AWS_ZONE_ID
+              value: {{ $zoneId }}
+            - name: FQDN
+              value: {{ $fqdn }}
+            - name: AWS_REGION
+              value: {{ .Values.config.region }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+            - name: TTL
+              value: {{ .Values.config.ttl }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secretName | default $fullName }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

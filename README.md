@@ -13,6 +13,8 @@ export AWS_ZONE_ID=EXAMPLEZONE
 export FQDN=test.example.com
 ```
 
+### Docker
+
 Run the DNS updater:
 
 ```bash
@@ -24,6 +26,8 @@ docker run \
   ghcr.io/mazay/dyndns-route53:main
 ```
 
+### Binary
+
 Alternatively there are prebuilt binaries for various OS/arch sets.
 
 Optional setting/variables:
@@ -31,6 +35,19 @@ Optional setting/variables:
 - `LOG_LEVEL`, valid options - `debug`, `info`, `warn`, `error`, `fatal`, `panic`. Defaults to `info`.
 - `AWS_REGION`, AWS region the `AWS_ZONE_ID` exists in. Defaults to `us-east-1`.
 - `TTL`, the TTL of the DNS record in seconds. AWS Recommended values: `60` to `172800`. Defaults to `60`.
+
+### Kubernetes
+
+The app can be deployed as a Kubernetes cronjob:
+
+```bash
+helm upgrade --install dyndns-route53 \
+  oci://ghcr.io/mazay/helm/dyndns-route53:0.0.0 \
+  --set config.accessKeyId=${AWS_ACCESS_KEY_ID} \
+  --set config.secretAccessKey=${AWS_SECRET_ACCESS_KEY} \
+  --set config.zoneId=${AWS_ZONE_ID} \
+  --set config.fqdn=${FQDN}
+```
 
 ## How it works
 

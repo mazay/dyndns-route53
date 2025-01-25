@@ -65,3 +65,22 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# custom seccret name, the secret data needs the following keys:
+# AWS_ACCESS_KEY_ID - required
+# AWS_SECRET_ACCESS_KEY - required
+# AWS_REGION - optional
+secretName: ""
+
+config:
+  # AWS_ACCESS_KEY_ID - both this and AWS_SECRET_ACCESS_KEY should be provided unless any other auth method is used or the secretName is provided
+  accessKeyId: ""
+  # AWS_SECRET_ACCESS_KEY - both this and AWS_ACCESS_KEY_ID should be provided unless any other auth method is used or the secretName is provided
+  secretAccessKey: ""
+  # AWS_ZONE_ID - required AWS Zone ID
+  zoneId: ""
+  # FQDN - required FQDN to be updated
+  region: "us-east-1"
+  fqdn: ""
+  logLevel: "info"
+  ttl: "60"
