@@ -5,14 +5,16 @@ A tiny app that helps with using AWS Route 53 as dynamic DNS service.
 ## Usage
 
 Set required variables:
+
 ```bash
-export AWS_ACCESS_KEY_ID=******
-export AWS_SECRET_ACCESS_KEY=************
+export AWS_ACCESS_KEY_ID=****** # may be skipped if any other auth method is available
+export AWS_SECRET_ACCESS_KEY=************ # may be skipped if any other auth method is available
 export AWS_ZONE_ID=EXAMPLEZONE
 export FQDN=test.example.com
 ```
 
 Run the DNS updater:
+
 ```bash
 docker run \
   -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" \
@@ -23,6 +25,12 @@ docker run \
 ```
 
 Alternatively there are prebuilt binaries for various OS/arch sets.
+
+Optional setting/variables:
+
+- `LOG_LEVEL`, valid options - `debug`, `info`, `warn`, `error`, `fatal`, `panic`. Defaults to `info`.
+- `AWS_REGION`, AWS region the `AWS_ZONE_ID` exists in. Defaults to `us-east-1`.
+- `TTL`, the TTL of the DNS record in seconds. AWS Recommended values: `60` to `172800`. Defaults to `60`.
 
 ## How it works
 
