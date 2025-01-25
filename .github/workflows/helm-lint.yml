@@ -3,7 +3,7 @@ name: Helm lint
 on:
   pull_request:
     paths:
-      - 'charts/**'
+      - 'deploy/**'
     branches:
       - main
 
