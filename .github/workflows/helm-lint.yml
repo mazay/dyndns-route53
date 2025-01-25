@@ -29,14 +29,14 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2
 
-    #   - name: Helm template
-    #     run: |
-    #       shopt -s globstar
-    #       for v in deploy/helm/ci/**/*.y*ml; do
-    #         echo "::group::Template for ${v}"
-    #         helm template deploy/helm -f "${v}"
-    #         echo "::endgroup::"
-    #       done
+      - name: Helm template
+        run: |
+          shopt -s globstar
+          for v in deploy/helm/ci/**/*.y*ml; do
+            echo "::group::Template for ${v}"
+            helm template deploy/helm -f "${v}"
+            echo "::endgroup::"
+          done
 
       - name: Run chart-testing (list-changed)
         id: list-changed

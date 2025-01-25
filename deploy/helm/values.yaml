@@ -80,7 +80,7 @@ config:
   # AWS_ZONE_ID - required AWS Zone ID
   zoneId: ""
   # FQDN - required FQDN to be updated
-  region: "us-east-1"
   fqdn: ""
+  region: "us-east-1"
   logLevel: "info"
   ttl: "60"
