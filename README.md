@@ -2,7 +2,7 @@
 
 A tiny app that helps with using AWS Route 53 as dynamic DNS service.
 
-### Docker
+## Docker
 
 Run the DNS updater:
 
@@ -15,11 +15,11 @@ docker run \
   ghcr.io/mazay/dyndns-route53:main
 ```
 
-### Binary
+## Binary
 
 Alternatively there are prebuilt binaries for various OS/arch sets.
 
-### Kubernetes
+## Kubernetes
 
 The app can be deployed as a Kubernetes cronjob:
 
