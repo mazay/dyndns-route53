@@ -11,6 +11,8 @@ metadata:
 spec:
   concurrentPolicy: Forbid
   failedJobHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
+  schedule: {{ .Values.schedule | default "*/5 * * * *" }}
   selector:
     matchLabels:
       {{- include "dyndns-route53.selectorLabels" . | nindent 6 }}
