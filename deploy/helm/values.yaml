@@ -86,3 +86,4 @@ config:
   region: "us-east-1"
   logLevel: "info"
   ttl: "60"
+  dryRun: "false"

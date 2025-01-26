@@ -50,6 +50,7 @@ export FQDN=test.example.com
 - `LOG_LEVEL`, valid options - `debug`, `info`, `warn`, `error`, `fatal`, `panic`. Defaults to `info`.
 - `AWS_REGION`, AWS region the `AWS_ZONE_ID` exists in. Defaults to `us-east-1`.
 - `TTL`, the TTL of the DNS record in seconds. AWS Recommended values: `60` to `172800`. Defaults to `60`.
+- `DRY_RUN`, the application runs as usually but skips the records update step when set to `true`, may be useful for testing.
 
 ## How it works
 
