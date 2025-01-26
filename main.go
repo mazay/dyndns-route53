@@ -32,6 +32,13 @@ func main() {
 	logger := initLogger(logLevel)
 	defer logger.Sync() //nolint:golint,errcheck
 
+	dryRunStr := getEnv("DRY_RUN", "false")
+	dryRun, err := strconv.ParseBool(dryRunStr)
+	if err != nil {
+		logger.Fatal("Invalid DRY_RUN value: " + err.Error())
+	}
+	logger.Info("DRY_RUN: " + strconv.FormatBool(dryRun))
+
 	// get AWS region from env variable or set default
 	region := getEnv("AWS_REGION", "us-east-1")
 	logger.Info("AWS region: " + region)
@@ -95,7 +102,7 @@ func main() {
 	}
 
 	logger.Info("updating route53 record with new IP address: " + ip)
-	err = r.UpdateRRecord(zoneId, fdqn, ip, ttl)
+	err = r.UpdateRRecord(zoneId, fdqn, ip, ttl, dryRun)
 	if err != nil {
 		logger.Fatal(err.Error())
 	}
