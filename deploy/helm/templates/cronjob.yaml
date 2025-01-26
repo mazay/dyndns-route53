@@ -11,6 +11,8 @@ metadata:
 spec:
   concurrentPolicy: Forbid
   failedJobHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
+  schedule: {{ .Values.schedule | default "*/5 * * * *" | quote }}
   selector:
     matchLabels:
       {{- include "dyndns-route53.selectorLabels" . | nindent 6 }}
@@ -36,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ $fullName | quote }}
           {{- with .Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
@@ -49,18 +51,18 @@ spec:
           {{- end }}
           env:
             - name: AWS_ZONE_ID
-              value: {{ $zoneId }}
+              value: {{ $zoneId | quote }}
             - name: FQDN
-              value: {{ $fqdn }}
+              value: {{ $fqdn | quote }}
             - name: AWS_REGION
-              value: {{ .Values.config.region }}
+              value: {{ .Values.config.region | quote }}
             - name: LOG_LEVEL
-              value: {{ .Values.config.logLevel }}
+              value: {{ .Values.config.logLevel | quote }}
             - name: TTL
-              value: {{ .Values.config.ttl }}
+              value: {{ .Values.config.ttl | quote }}
           envFrom:
             - secretRef:
-                name: {{ .Values.secretName | default $fullName }}
+                name: {{ .Values.secretName | default $fullName | quote }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
