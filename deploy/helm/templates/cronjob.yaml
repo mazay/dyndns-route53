@@ -12,6 +12,7 @@ spec:
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 1
+  startingDeadlineSeconds: 60
   schedule: {{ .Values.schedule | default "*/5 * * * *" | quote }}
   jobTemplate:
     metadata:
