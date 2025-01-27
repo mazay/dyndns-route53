@@ -37,7 +37,9 @@ func main() {
 	if err != nil {
 		logger.Fatal("Invalid DRY_RUN value: " + err.Error())
 	}
-	logger.Info("DRY_RUN: " + strconv.FormatBool(dryRun))
+	if dryRun {
+		logger.Info("DRY_RUN is opted in, no changes will be made")
+	}
 
 	// get AWS region from env variable or set default
 	region := getEnv("AWS_REGION", "us-east-1")
@@ -48,7 +50,7 @@ func main() {
 	if err != nil {
 		logger.Fatal("Invalid TTL value: " + err.Error())
 	}
-	logger.Info("TTL: " + strconv.FormatInt(ttl, 10))
+	logger.Info("DNS record TTL: " + strconv.FormatInt(ttl, 10))
 
 	// get AWS credentials from env variables, they are optional as we can use other auth methods
 	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
@@ -58,7 +60,7 @@ func main() {
 	if !ok {
 		logger.Fatal("AWS_ZONE_ID is not provided")
 	}
-	logger.Info("zone ID: " + zoneId)
+	logger.Info("AWS route 53 zone ID: " + zoneId)
 
 	fdqn, ok := os.LookupEnv("FQDN")
 	if !ok {
@@ -84,7 +86,7 @@ func main() {
 
 	for _, _ip := range oldIp {
 		if strings.Contains(_ip.String(), ip) {
-			logger.Info("old IP address " + _ip.String() + " is the same as the new IP address " + ip)
+			logger.Info("IP address has not changed")
 			return
 		}
 	}
@@ -95,7 +97,7 @@ func main() {
 		SecretAccessKey: secretAccessKey,
 	}
 
-	logger.Info("initializing route53 client")
+	logger.Debug("initializing route53 client")
 	r, err := r53.New()
 	if err != nil {
 		logger.Fatal(err.Error())
