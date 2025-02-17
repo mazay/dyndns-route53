@@ -34,7 +34,7 @@ helm upgrade --install dyndns-route53 \
 
 ## Configuration options
 
-The application is fully configurable though the environment variables, however, AWS authentication supports all the native methods, thus the the access keys can be skipped if other auth methods are used.
+The application is fully configurable through the environment variables, however, AWS authentication supports all the native methods, thus the access keys can be skipped if other auth methods are used/available.
 
 **Required variables**:
 
