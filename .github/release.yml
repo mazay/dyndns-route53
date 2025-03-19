@@ -9,6 +9,9 @@ changelog:
     - title: 🐞 Bug fixes
       labels:
         - bug
+    - title: 🛡️ Security fixes
+      labels:
+        - security
     - title: 📦 Dependencies
       labels:
         - dependencies
