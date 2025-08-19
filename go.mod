@@ -3,18 +3,18 @@ module github.com/mazay/dyndns-route53
 go 1.24
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.37.2
+	github.com/aws/aws-sdk-go-v2 v1.38.0
 	github.com/aws/aws-sdk-go-v2/config v1.30.3
 	github.com/aws/aws-sdk-go-v2/credentials v1.18.3
-	github.com/aws/aws-sdk-go-v2/service/route53 v1.55.0
+	github.com/aws/aws-sdk-go-v2/service/route53 v1.56.0
 	github.com/go-resty/resty/v2 v2.16.5
 	go.uber.org/zap v1.27.0
 )
 
 require (
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.2 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.2 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.2 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.3 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.3 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.2 // indirect
