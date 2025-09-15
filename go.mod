@@ -3,7 +3,7 @@ module github.com/mazay/dyndns-route53
 go 1.24
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.38.3
+	github.com/aws/aws-sdk-go-v2 v1.39.0
 	github.com/aws/aws-sdk-go-v2/config v1.31.6
 	github.com/aws/aws-sdk-go-v2/credentials v1.18.10
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.57.2
