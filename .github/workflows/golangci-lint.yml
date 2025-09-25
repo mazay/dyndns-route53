@@ -12,13 +12,13 @@ jobs:
     name: go-lint
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v5
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
           cache-dependency-path: go.sum
-
-      - uses: actions/checkout@v5
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
