@@ -1,7 +1,6 @@
 name: Build
 
 env:
-  GO_VERSION: "1.23"
   ATTACHMENTS: ""
   GOPATH: ${{ github.workspace }}
 
@@ -26,28 +25,23 @@ jobs:
     steps:
       - name: Chechout
         uses: actions/checkout@v5
-        with:
-          path: ./src/github.com/${{ github.repository }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
-          cache-dependency-path: "**/go.sum"
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
 
       - name: Install dependencies
         run: |
-          cd ./src/github.com/${{ github.repository }}
           go mod download
 
       - name: Run tests
         run: |
-          cd ./src/github.com/${{ github.repository }}
           GOFLAGS="-json" go test -timeout 5m ./... -coverprofile cover.out
 
   build:
     runs-on: ubuntu-latest
-    needs: test
     strategy:
       matrix:
         go-os: [darwin, windows, linux, freebsd]
@@ -76,18 +70,15 @@ jobs:
 
       - name: Chechout
         uses: actions/checkout@v5
-        with:
-          path: ./src/github.com/${{ github.repository }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
-          cache-dependency-path: "**/go.sum"
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
 
       - name: Install dependencies
         run: |
-          cd ./src/github.com/${{ github.repository }}
           go mod download
 
       - name: Build
@@ -98,18 +89,16 @@ jobs:
           ARCH: ${{ matrix.go-arch }}
           GOARCH: ${{ matrix.go-arch }}
         run: |
-          cd ./src/github.com/${{ github.repository }}
           go build -o ./bin/dyndns-route53-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dyndns-route53-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
-          path: ./src/github.com/${{ github.repository }}/bin/dyndns-route53-*
+          path: ./bin/dyndns-route53-*
 
   docker:
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - name: Docker meta
         id: meta
