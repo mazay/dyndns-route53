@@ -43,7 +43,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: test
     strategy:
       matrix:
         go-os: [darwin, windows, linux, freebsd]
@@ -101,7 +100,6 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - name: Docker meta
         id: meta
