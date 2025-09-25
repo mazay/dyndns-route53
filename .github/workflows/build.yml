@@ -26,23 +26,19 @@ jobs:
     steps:
       - name: Chechout
         uses: actions/checkout@v4
-        with:
-          path: ./src/github.com/${{ github.repository }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
-          cache-dependency-path: "**/go.sum"
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
 
       - name: Install dependencies
         run: |
-          cd ./src/github.com/${{ github.repository }}
           go mod download
 
       - name: Run tests
         run: |
-          cd ./src/github.com/${{ github.repository }}
           GOFLAGS="-json" go test -timeout 5m ./... -coverprofile cover.out
 
   build:
@@ -76,18 +72,15 @@ jobs:
 
       - name: Chechout
         uses: actions/checkout@v4
-        with:
-          path: ./src/github.com/${{ github.repository }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ env.GO_VERSION }}
-          cache-dependency-path: "**/go.sum"
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
 
       - name: Install dependencies
         run: |
-          cd ./src/github.com/${{ github.repository }}
           go mod download
 
       - name: Build
@@ -98,7 +91,6 @@ jobs:
           ARCH: ${{ matrix.go-arch }}
           GOARCH: ${{ matrix.go-arch }}
         run: |
-          cd ./src/github.com/${{ github.repository }}
           go build -o ./bin/dyndns-route53-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
 
       - name: Upload artifacts
