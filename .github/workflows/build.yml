@@ -97,7 +97,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dyndns-route53-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
-          path: ./src/github.com/${{ github.repository }}/bin/dyndns-route53-*
+          path: ./bin/dyndns-route53-*
 
   docker:
     runs-on: ubuntu-latest
