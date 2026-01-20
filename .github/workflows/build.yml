@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Chechout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Go
         uses: actions/setup-go@v6
@@ -68,7 +68,7 @@ jobs:
             type=sha
 
       - name: Chechout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Go
         uses: actions/setup-go@v6
@@ -91,7 +91,7 @@ jobs:
           go build -o ./bin/dyndns-route53-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: dyndns-route53-${{ steps.meta.outputs.version }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
           path: ./bin/dyndns-route53-*
@@ -116,7 +116,7 @@ jobs:
             type=sha
 
       - name: Chechout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -149,10 +149,10 @@ jobs:
     needs: build
     steps:
       - name: Chechout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Download artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           merge-multiple: true
           path: artifacts/
@@ -170,7 +170,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: docker
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install Helm
         uses: azure/setup-helm@v4.3.1
