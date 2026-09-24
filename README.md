@@ -1,3 +1,7 @@
+# Migrated
+
+⚠️ ⚠️ ⚠️ The project has been migrated to Codeberg: https://codeberg.org/mazay/dyndns-route53 ⚠️ ⚠️ ⚠️
+
 # Use case
 
 A tiny app that helps with using AWS Route 53 as dynamic DNS service.
